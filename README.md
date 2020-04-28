@@ -1,4 +1,3 @@
 
 # Weather_App
-Simple Weather App using Flutter
-demo_video.mp4 file included to see demo of app.
+Simple Weather App using Flutter. Included demo file to view app: demo_video.mp4 
