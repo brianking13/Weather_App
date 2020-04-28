@@ -1,0 +1,68 @@
+import 'package:flutter/material.dart';
+//https://stackoverflow.com/questions/49402837/flutter-overlay-card-widget-on-a-container
+
+class Testing extends StatefulWidget {
+  @override
+  _TestingState createState() => _TestingState();
+}
+
+class _TestingState extends State<Testing> {
+  double _width = 0.0;
+  double _height = 0.0;
+  @override
+  Widget build(BuildContext context) {
+    _width = MediaQuery.of(context).size.width;
+    _height = MediaQuery.of(context).size.height;
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: <Widget>[
+          getOverlayWidget(),
+          // The containers in the background and scrollable
+          getScrollableBody(),
+
+        ],
+      ),
+    );
+  }
+
+  Widget getOverlayWidget() {
+    return new Container(
+      alignment: Alignment.topCenter,
+      child: new Container(
+        height: _height * .95,
+        width: _width,
+        color: Colors.cyan.withOpacity(1),
+      ),
+    );
+  }
+  Widget getScrollableBody() {
+    return SingleChildScrollView(
+      child: new Column(
+        children: <Widget>[
+          new Container(
+            height: _height * .95,
+            color: Colors.yellow.withOpacity(0.0),
+          ),
+          new Container(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Card(
+                elevation: 3,
+                child: Container(
+                  color: Colors.brown,
+                ),
+              ),
+            ),
+            height: _height * .65,
+            color: Colors.cyan,
+          ),
+          new Container(
+            height: _height * .2,
+            color: Colors.cyan,
+          ),
+        ],
+      ),
+    );
+  }
+}

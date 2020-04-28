@@ -1,0 +1,221 @@
+import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
+
+//https://pub.dev/packages/weather_icons#-readme-tab-
+// https://pub.dev/packages/fl_chart
+
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+
+  Map data = {};
+
+  @override
+  Widget build(BuildContext context) {
+
+    data = data.isNotEmpty ? data :  ModalRoute.of(context).settings.arguments;
+
+
+    return Scaffold(
+      backgroundColor: Colors.blueGrey[900],
+      body:
+
+      Padding(
+        padding: const EdgeInsets.all(30),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Container(
+
+                    // change location
+                    child: FlatButton.icon(
+                      onPressed: ()async {
+                      dynamic  result = await Navigator.pushNamed(context, '/location');
+                      setState(() {
+                      data = {
+                        'location': result['location'],
+                        'current': result['current'],
+                        'temps' : result['temps'],
+                        'high' : result['high'],
+                        'graphic' : result['graphic'],
+                        'conditions' :result['conditions'],
+                        'time' : result['time'],
+                        'city' :result['city'],
+                      };
+                      });
+                      },
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: BorderSide(color: Colors.white)
+                      ),
+                      highlightColor: Colors.blueGrey[700],
+                      label:Text(
+                        data['city'] ,// TODO: replace with location
+                        style: TextStyle(fontSize: 25, color: Colors.white),
+                      ) ,
+                      icon: Icon(Icons.location_on, color: Colors.white, size: 20.0),
+                    ),
+
+
+
+                  )
+                ],
+              ),
+            ),
+
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(30,50,0,0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    child: Text(
+                      data['current'].toString(), // this is where temperature will go
+                      style: TextStyle(fontSize: 90, color: Colors.white),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0,5.0,0,0),
+                    child: Container(
+                        child: Text('°F', style: TextStyle(fontSize: 25, color: Colors.white),
+                        )
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(30,5,0,0),
+                    child: Container(
+                        child:
+                        Image.asset(data['graphic'], scale: 1.8,) //TODO: replace with actual conditions
+                    ),
+                  )
+                ],
+              ),
+            ),// choose_location widget
+            SizedBox(height: 150.0,),
+            BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceBetween,
+                maxY:  data['current'] - 3.0,
+                barTouchData: BarTouchData(
+                  enabled: false,
+                  touchTooltipData: BarTouchTooltipData(
+                    tooltipBgColor: Colors.transparent,
+                    tooltipPadding: const EdgeInsets.all(0),
+                    tooltipBottomMargin: 8,
+                    getTooltipItem: (
+                        BarChartGroupData group,
+                        int groupIndex,
+                        BarChartRodData rod,
+                        int rodIndex,
+                        ) {
+                      return BarTooltipItem(
+                        rod.y.round().toString(),
+                        TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                titlesData: FlTitlesData(
+                  show: true,
+                  bottomTitles: SideTitles(
+                    showTitles: true,
+                    textStyle: TextStyle(
+                        color: Colors.grey[400], fontWeight: FontWeight.bold, fontSize: 14),
+                    margin: 20,
+                    getTitles: (double value) {
+                      switch (value.toInt()) {
+                        case 0:
+                          return data['time'][0];
+                        case 1:
+                          return data['time'][1];
+                        case 2:
+                          return data['time'][2];
+                        case 3:
+                          return data['time'][3];
+                        case 4:
+                          return data['time'][4];
+                        case 5:
+                          return data['time'][5];
+                        case 6:
+                          return data['time'][6];
+                        default:
+                          return '';
+                      }
+                    },
+                  ),
+                  leftTitles: SideTitles(showTitles: false),
+                ),
+                borderData: FlBorderData(
+                    show: false,
+                    border: Border.all(color: Colors.white)
+                ),
+                barGroups: [
+                  BarChartGroupData(
+                      x: 0,
+                      barRods: [BarChartRodData(y: data['temps'][0].toDouble(), color: Colors.lightBlueAccent, width: 20)],
+                      showingTooltipIndicators: [0]),
+                  BarChartGroupData(
+                      x: 1,
+                      barRods: [BarChartRodData(y: data['temps'][1].toDouble(), color: Colors.lightBlueAccent, width: 20)],
+                      showingTooltipIndicators: [0]),
+                  BarChartGroupData(
+                      x: 2,
+                      barRods: [BarChartRodData(y: data['temps'][2].toDouble(), color: Colors.lightBlueAccent, width: 20)],
+                      showingTooltipIndicators: [0]),
+                  BarChartGroupData(
+                      x: 3,
+                      barRods: [BarChartRodData(y: data['temps'][3].toDouble(), color: Colors.lightBlueAccent, width: 20)],
+                      showingTooltipIndicators: [0]),
+                  BarChartGroupData(
+                      barRods: [BarChartRodData(y: data['temps'][4].toDouble(), color: Colors.lightBlueAccent, width: 20)], x: 3,
+
+                      showingTooltipIndicators: [0]),
+                  BarChartGroupData(
+                      x: 3,
+                      barRods: [BarChartRodData(y: data['temps'][5].toDouble(), color: Colors.lightBlueAccent, width: 20)],
+                      showingTooltipIndicators: [0]),
+                ],
+              ),
+            ),
+            SizedBox(height: 15,),
+            Row(
+              children: <Widget>[
+                SizedBox(width: 29,),
+                Image.asset('graphics/wi-cloud.png', scale: 10,),
+                SizedBox(width: 29,),
+                Image.asset('graphics/wi-cloud.png', scale: 10,),
+                SizedBox(width: 29,),
+                Image.asset('graphics/wi-cloud.png', scale: 10,),
+                SizedBox(width: 29,),
+                Image.asset('graphics/wi-cloud.png', scale: 10,),
+                SizedBox(width: 29,),
+                Image.asset('graphics/wi-cloud.png', scale: 10,),
+                SizedBox(width: 29,),
+                Image.asset('graphics/wi-cloud.png', scale: 10,)
+              ],
+            ),
+
+
+            
+
+
+          ],
+
+        ),
+      ),
+
+    );
+  } }
+
